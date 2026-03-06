@@ -94,8 +94,8 @@
   ];
 
   const DIFFICULTY_MULTIPLIERS = {
-    easy: { hp: 0.7, gold: 0.95 },
-    normal: { hp: 1, gold: 1 },
+    easy: { hp: 0.9, gold: 0.95 },
+    normal: { hp: 1.2, gold: 1 },
     hard: { hp: 2.4, gold: 1.25 }
   };
 

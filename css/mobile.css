@@ -1,4 +1,9 @@
 @media (max-width: 900px) {
+  body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .intro-book-inner {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -55,6 +60,27 @@
   .difficulty-btns {
     flex-direction: row;
     justify-content: center;
+  }
+
+  .top-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .audio-btn,
+  .reset-btn {
+    width: auto;
+  }
+
+  .stats-line {
+    font-size: 0.95rem;
+    gap: 14px;
+  }
+
+  .stat-line-icon {
+    width: 22px;
+    height: 22px;
   }
 
   .monster-image {

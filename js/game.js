@@ -55,15 +55,19 @@ function createInitialState() {
     stats: {
       power: 1,
       magic: 0,
+      bleed: 0,
       critChance: 0,
       critDamage: 1.5
     },
     upgradeCosts: {
       power: 10,
       magic: 15,
+      bleed: 35,
       critChance: 22,
       critDamage: 30
     },
+    monsterBleedStacks: 0,
+    monsterBleedRounds: 0,
     audioMuted: false
   };
 }
@@ -106,8 +110,10 @@ const ui = {
   statMagic: document.getElementById("statMagic"),
   statCritChance: document.getElementById("statCritChance"),
   statCritDamage: document.getElementById("statCritDamage"),
+  statBleed: document.getElementById("statBleed"),
   pricePower: document.getElementById("pricePower"),
   priceMagic: document.getElementById("priceMagic"),
+  priceBleed: document.getElementById("priceBleed"),
   priceCritChance: document.getElementById("priceCritChance"),
   priceCritDamage: document.getElementById("priceCritDamage"),
   skillButtons: document.querySelectorAll(".skill-btn"),
@@ -173,6 +179,7 @@ function loadProgress() {
     if (saved.stats) {
       state.stats.power = Math.max(1, sanitizeLoadedNumber(saved.stats.power, state.stats.power));
       state.stats.magic = Math.max(0, sanitizeLoadedNumber(saved.stats.magic, state.stats.magic));
+      state.stats.bleed = Math.max(0, Math.min(0.4, sanitizeLoadedNumber(saved.stats.bleed, state.stats.bleed)));
       state.stats.critChance = Math.max(0, Math.min(0.85, sanitizeLoadedNumber(saved.stats.critChance, state.stats.critChance)));
       state.stats.critDamage = Math.max(1.5, sanitizeLoadedNumber(saved.stats.critDamage, state.stats.critDamage));
     }
@@ -180,6 +187,7 @@ function loadProgress() {
     if (saved.upgradeCosts) {
       state.upgradeCosts.power = Math.max(10, sanitizeLoadedNumber(saved.upgradeCosts.power, state.upgradeCosts.power));
       state.upgradeCosts.magic = Math.max(10, sanitizeLoadedNumber(saved.upgradeCosts.magic, state.upgradeCosts.magic));
+      state.upgradeCosts.bleed = Math.max(10, sanitizeLoadedNumber(saved.upgradeCosts.bleed, state.upgradeCosts.bleed));
       state.upgradeCosts.critChance = Math.max(10, sanitizeLoadedNumber(saved.upgradeCosts.critChance, state.upgradeCosts.critChance));
       state.upgradeCosts.critDamage = Math.max(10, sanitizeLoadedNumber(saved.upgradeCosts.critDamage, state.upgradeCosts.critDamage));
     }
@@ -251,6 +259,8 @@ function resetProgress() {
   state.attackLocked = false;
   state.stats = { ...initial.stats };
   state.upgradeCosts = { ...initial.upgradeCosts };
+  state.monsterBleedStacks = initial.monsterBleedStacks || 0;
+  state.monsterBleedRounds = initial.monsterBleedRounds || 0;
 
   localStorage.removeItem(STORAGE_KEY);
   ui.logText.textContent = "Прогресс сброшен. Новая охота началась!";
@@ -389,6 +399,7 @@ function render() {
   };
   ui.monsterImage.src = monster.image;
   ui.monsterImage.alt = monster.name;
+  ui.monsterImage.dataset.monster = monster.id || "";
   if (monster.id === "t3") {
     ui.monsterImage.style.width = "260px";
     ui.monsterImage.style.height = "260px";
@@ -418,26 +429,35 @@ function render() {
 
   ui.statPower.textContent = state.stats.power;
   ui.statMagic.textContent = state.stats.magic;
+  if (ui.statBleed) ui.statBleed.textContent = Math.round(state.stats.bleed * 100) + "%";
   ui.statCritChance.textContent = `${Math.round(state.stats.critChance * 100)}%`;
   ui.statCritDamage.textContent = `x${state.stats.critDamage.toFixed(2)}`;
 
   ui.pricePower.textContent = state.upgradeCosts.power;
   ui.priceMagic.textContent = state.upgradeCosts.magic;
+  if (ui.priceBleed) ui.priceBleed.textContent = state.upgradeCosts.bleed;
   ui.priceCritChance.textContent = state.upgradeCosts.critChance;
   ui.priceCritDamage.textContent = state.upgradeCosts.critDamage;
 
   ui.skillButtons.forEach((btn) => {
     const skill = btn.dataset.skill;
     const cost = state.upgradeCosts[skill];
+    const canAfford = state.difficultyChosen && state.gold >= cost;
     btn.disabled = !state.difficultyChosen || state.gold < cost;
+    btn.classList.toggle("affordable", canAfford);
   });
   updateAudioButtonText();
 }
+
+var BLEED_DAMAGE_PER_STACK = 2;
+var BLEED_ROUNDS = 3;
 
 function nextMonster() {
   state.monsterIndex = (state.monsterIndex + 1) % monsters.length;
   state.currentHp = getMonsterEffectiveMaxHp(getCurrentMonster());
   state.hitCountOnCurrent = 0;
+  state.monsterBleedStacks = 0;
+  state.monsterBleedRounds = 0;
 }
 
 function attack() {
@@ -456,6 +476,40 @@ function attack() {
   const monster = getCurrentMonster();
   state.hitCountOnCurrent += 1;
   state.totalHitsEver += 1;
+
+  if (state.monsterBleedRounds > 0 && state.monsterBleedStacks > 0) {
+    var bleedDmg = state.monsterBleedStacks * BLEED_DAMAGE_PER_STACK;
+    state.currentHp -= bleedDmg;
+    showDmgNumber(bleedDmg, false);
+    state.monsterBleedRounds -= 1;
+    if (state.monsterBleedRounds <= 0) {
+      state.monsterBleedStacks = 0;
+    }
+  }
+
+  if (state.currentHp <= 0) {
+    state.attackLocked = true;
+    if (monster.id === "t-boss") state.difficultyLocked = false;
+    playOneShot(AUDIO_PATHS.death, 0.68);
+    showDeathParticles();
+    var goldEarned = getMonsterEffectiveGold(monster);
+    state.gold += goldEarned;
+    state.kills += 1;
+    checkAchievements();
+    var didLevelUp = gainXp(monster.xp);
+    ui.logText.textContent = monster.name + " повержен! +" + goldEarned + " золота, +" + monster.xp + " опыта." + (didLevelUp ? " Уровень повышен!" : "");
+    setTimeout(function () {
+      nextMonster();
+      state.attackLocked = false;
+      render();
+      updateDifficultyButtons();
+      saveProgress();
+    }, 480);
+    render();
+    updateDifficultyButtons();
+    saveProgress();
+    return;
+  }
 
   const rageBonus = state.rageReady;
   if (state.rageReady) {
@@ -480,6 +534,11 @@ function attack() {
     state.currentHp -= finalDamage;
     showDmgNumber(finalDamage, didCrit || rageBonus);
     playSlimeHitAnimation();
+  }
+
+  if (state.stats.bleed > 0 && Math.random() < state.stats.bleed) {
+    state.monsterBleedStacks += 1;
+    state.monsterBleedRounds = BLEED_ROUNDS;
   }
 
   state.rage = Math.min(100, state.rage + (didCrit ? 4 : 2));
@@ -510,16 +569,27 @@ function attack() {
     checkAchievements();
     const didLevelUp = gainXp(monster.xp);
     ui.logText.textContent = `${monster.name} повержен! +${goldEarned} золота, +${monster.xp} опыта.${didLevelUp ? " Уровень повышен!" : ""}`;
-    setTimeout(() => {
-      nextMonster();
-      state.attackLocked = false;
-      render();
-      updateDifficultyButtons();
-      saveProgress();
-    }, 480);
     render();
     updateDifficultyButtons();
     saveProgress();
+
+    var card = document.querySelector(".monster-card");
+    if (card) card.classList.add("monster-out");
+    setTimeout(function () {
+      nextMonster();
+      render();
+      if (card) {
+        card.classList.remove("monster-out");
+        card.classList.add("monster-in");
+      }
+      setTimeout(function () {
+        if (card) card.classList.remove("monster-in");
+        state.attackLocked = false;
+        render();
+        updateDifficultyButtons();
+        saveProgress();
+      }, 560);
+    }, 520);
     return;
   }
 
@@ -552,6 +622,9 @@ function upgradeSkill(skill) {
   } else if (skill === "critChance") {
     state.stats.critChance = Math.min(0.85, Number((state.stats.critChance + 0.04).toFixed(2)));
     ui.logText.textContent = "Крит шанс повышен.";
+  } else if (skill === "bleed") {
+    state.stats.bleed = Math.min(0.4, Number((state.stats.bleed + 0.05).toFixed(2)));
+    ui.logText.textContent = "Кровотечение усилено.";
   } else if (skill === "critDamage") {
     state.stats.critDamage = Number((state.stats.critDamage + 0.15).toFixed(2));
     ui.logText.textContent = "Крит урон повышен.";

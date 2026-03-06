@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 html {
@@ -25,6 +26,8 @@ body {
   color: #fff;
   background: #122;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
   flex-direction: column;
@@ -91,27 +94,49 @@ button {
 .stats-line {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  font-size: 0.9rem;
-  margin-bottom: 6px;
+  align-items: center;
+  gap: 20px;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+  min-height: 36px;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 1.05rem;
+}
+
+.stat-line-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .top-actions {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(139, 202, 165, 0.25);
 }
 
 .audio-btn,
 .reset-btn {
+  width: 100%;
   background: rgba(178, 60, 60, 0.95);
   color: #fff;
   border: 1px solid rgba(255, 210, 210, 0.5);
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .audio-btn {
@@ -145,9 +170,60 @@ button {
   justify-self: stretch;
 }
 
+/* Десктоп: окошко с монстром крупнее по вертикали и горизонтали */
+@media (min-width: 901px) {
+  .battle-section {
+    padding: 20px 18px 24px;
+    margin-bottom: 12px;
+  }
+  .monster-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+  }
+  .monster-visual-wrap {
+    margin-bottom: 14px;
+  }
+  .monster-image {
+    width: 360px !important;
+    height: 360px !important;
+  }
+  .monster-image[data-monster="t3"] {
+    width: 400px !important;
+    height: 400px !important;
+  }
+  .rage-row {
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  .rage-bar {
+    height: 18px;
+  }
+  .trait-text {
+    font-size: 0.95rem;
+    min-height: 20px;
+  }
+  .hp-row {
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  .hp-bar {
+    height: 20px;
+  }
+  .attack-btn {
+    padding: 14px 24px;
+    font-size: 1.05rem;
+    margin-top: 4px;
+  }
+  .log-text {
+    font-size: 0.95rem;
+    margin-top: 12px;
+    min-height: 22px;
+  }
+}
+
 .content-grid {
   display: grid;
-  grid-template-columns: 140px minmax(220px, 300px) 1fr;
+  grid-template-columns: 200px minmax(220px, 300px) 1fr;
   gap: 10px;
   align-items: start;
   min-height: 0;
@@ -181,6 +257,30 @@ button {
   justify-content: center;
   animation: slimeIdle 2.8s ease-in-out infinite;
   flex-shrink: 0;
+}
+
+.monster-card.monster-out .monster-visual-wrap {
+  animation: none;
+}
+
+.monster-card.monster-out .monster-image {
+  animation: monsterOut 0.5s ease-in forwards;
+}
+
+.monster-card.monster-in .monster-image {
+  animation: monsterIn 0.55s ease-out forwards;
+}
+
+@keyframes monsterOut {
+  0% { opacity: 1; transform: scale(1); filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35)); }
+  70% { transform: scale(0.6); filter: drop-shadow(0 0 20px rgba(180, 255, 120, 0.4)); }
+  100% { opacity: 0; transform: scale(0.35); filter: drop-shadow(0 0 8px rgba(150, 220, 100, 0.3)); }
+}
+
+@keyframes monsterIn {
+  0% { opacity: 0; transform: scale(0.4); filter: drop-shadow(0 0 16px rgba(100, 200, 80, 0.5)); }
+  50% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35)); }
 }
 
 .monster-image {
@@ -346,14 +446,47 @@ button {
 
 .skill-icon,
 .stat-icon {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.skill-btn {
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  border: 1px solid rgba(185, 236, 208, 0.5);
+  color: #f8fff9;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.skill-btn:not(.affordable) {
+  background: rgba(30, 50, 42, 0.95);
+  border-color: rgba(120, 140, 130, 0.4);
+  color: #a0b0a8;
+}
+
+.skill-btn.affordable {
+  background: rgba(45, 110, 75, 0.95);
+  border-color: rgba(160, 255, 190, 0.55);
+  box-shadow: 0 0 12px rgba(80, 200, 120, 0.25);
+  color: #f0fff4;
+}
+
+.skill-btn.affordable:hover:not(:disabled) {
+  box-shadow: 0 0 16px rgba(100, 220, 140, 0.4);
 }
 
 .skill-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.6;
   cursor: not-allowed;
+}
+
+.skill-btn:disabled.affordable {
+  opacity: 0.85;
 }
 
 .player-stats {
@@ -374,23 +507,23 @@ button {
   font-size: 0.85rem;
 }
 
-/* Difficulty panel — фиксированный размер, слева */
+/* Difficulty panel — крупнее на компе, слева */
 .difficulty-panel {
-  width: 140px;
-  min-width: 140px;
-  max-width: 140px;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   justify-self: start;
 }
 .difficulty-frame {
-  width: 140px;
-  min-width: 140px;
-  max-width: 140px;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   box-sizing: border-box;
   background: rgba(12, 28, 22, 0.9);
   border: 1px solid rgba(139, 202, 165, 0.35);
-  border-radius: 8px;
-  padding: 10px 12px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 14px rgba(0,0,0,0.25);
 }
 .difficulty-frame.difficulty-shake {
   animation: difficultyShake 0.5s ease-in-out;
@@ -403,24 +536,24 @@ button {
   75% { transform: translateX(6px); }
 }
 .difficulty-title {
-  margin: 0 0 8px;
-  font-size: 0.9rem;
+  margin: 0 0 12px;
+  font-size: 1.05rem;
   color: #b5e8c8;
   text-align: center;
 }
 .difficulty-btns {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 .difficulty-btn {
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.25);
   background: rgba(35, 55, 45, 0.9);
   color: #b0c8bc;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
@@ -441,26 +574,35 @@ button {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e8c890;
 }
 .rage-bar {
-  height: 12px;
+  height: 16px;
   border-radius: 999px;
-  background: rgba(0,0,0,0.4);
+  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(40,20,0,0.6) 100%);
   overflow: hidden;
-  border: 1px solid rgba(255,200,100,0.35);
+  border: 1px solid rgba(255,180,80,0.4);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 0 rgba(255,220,150,0.15);
 }
 .rage-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #c85a20, #f0a050);
-  transition: width 0.15s ease;
+  background: linear-gradient(90deg, #8b3a10 0%, #c85a20 30%, #e88a40 70%, #f0a050 100%);
+  transition: width 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .rage-fill.full {
-  background: linear-gradient(90deg, #e07030, #ffcc66);
-  box-shadow: 0 0 10px rgba(255,180,80,0.6);
+  background: linear-gradient(90deg, #a05020 0%, #e07030 25%, #ffaa50 75%, #ffcc66 100%);
+  box-shadow: 0 0 14px rgba(255,180,80,0.7), inset 0 1px 0 rgba(255,255,255,0.35);
+  animation: rageGlow 1.2s ease-in-out infinite;
+}
+@keyframes rageGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.08); }
 }
 
 /* Flying damage numbers */

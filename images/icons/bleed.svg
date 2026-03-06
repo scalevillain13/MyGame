@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="30" fill="#3d1a1a"/>
+  <!-- меч: клинок -->
+  <path d="M32 10 L34 32 L30 32 Z" fill="#7a6a6a"/>
+  <path d="M32 12 L33 30 L31 30 Z" fill="#9a8a8a"/>
+  <!-- гарда -->
+  <rect x="28" y="30" width="8" height="2.5" rx="0.5" fill="#5c4a3a"/>
+  <!-- рукоять -->
+  <rect x="30" y="32" width="4" height="12" rx="0.5" fill="#4a3a2a"/>
+  <!-- капля крови -->
+  <path d="M32 44 C28 44 26 48 32 54 C38 48 36 44 32 44 Z" fill="#b22222"/>
+  <path d="M32 46 C29.5 46 28 49 32 52 C36 49 34.5 46 32 46 Z" fill="#dc143c"/>
+</svg>

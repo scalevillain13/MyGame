@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Убийца Слизней</title>
   <link rel="icon" type="image/png" href="./images/sl-boss.png">
   <link rel="stylesheet" href="./css/style.css">
@@ -41,14 +41,10 @@
         Убийца Слизней
       </h1>
       <div class="stats-line">
-        <span>Золото: <strong id="gold">0</strong></span>
-        <span>Убийств: <strong id="kills">0</strong></span>
-        <span>Уровень: <strong id="level">1</strong></span>
-        <span>Опыт: <strong id="xpText">0 / 12</strong></span>
-      </div>
-      <div class="top-actions">
-        <button id="audioToggleBtn" class="audio-btn">Звук: Вкл</button>
-        <button id="resetBtn" class="reset-btn">Начать заново</button>
+        <span class="stat-item"><img src="./images/icons/coins.svg" alt="" class="stat-line-icon"> Золото: <strong id="gold">0</strong></span>
+        <span class="stat-item"><img src="./images/icons/kills.svg" alt="" class="stat-line-icon"> Убийств: <strong id="kills">0</strong></span>
+        <span class="stat-item"><img src="./images/icons/level.svg" alt="" class="stat-line-icon"> Уровень: <strong id="level">1</strong></span>
+        <span class="stat-item"><img src="./images/icons/xp.svg" alt="" class="stat-line-icon"> Опыт: <strong id="xpText">0 / 12</strong></span>
       </div>
     </header>
 
@@ -62,6 +58,10 @@
             <button type="button" class="difficulty-btn" data-difficulty="hard">Сложно</button>
           </div>
           <p id="difficultyLockHint" class="difficulty-lock-hint">Сменится после победы над боссом</p>
+          <div class="top-actions">
+            <button id="audioToggleBtn" class="audio-btn">Звук: Вкл</button>
+            <button id="resetBtn" class="reset-btn">Начать заново</button>
+          </div>
         </div>
       </aside>
       <section class="skills-section">
@@ -69,38 +69,46 @@
         <div class="skills-grid">
           <button class="skill-btn" data-skill="power">
             <span class="skill-head">
-              <img src="./images/icons/power.svg" alt="Иконка силы" class="skill-icon">
+              <img src="./images/icons/sword.svg" alt="Сила" class="skill-icon">
               Сила удара (+1)
             </span><br>
             Цена: <span id="pricePower">10</span>
           </button>
           <button class="skill-btn" data-skill="magic">
             <span class="skill-head">
-              <img src="./images/icons/magic.svg" alt="Иконка магии" class="skill-icon">
+              <img src="./images/icons/magic-wand.svg" alt="Магия" class="skill-icon">
               Магия (+1)
             </span><br>
             Цена: <span id="priceMagic">15</span>
           </button>
+          <button class="skill-btn" data-skill="bleed">
+            <span class="skill-head">
+              <img src="./images/icons/bleed.svg" alt="Кровотечение" class="skill-icon">
+              Кровотечение (+5%)
+            </span><br>
+            Цена: <span id="priceBleed">35</span>
+          </button>
           <button class="skill-btn" data-skill="critChance">
             <span class="skill-head">
-              <img src="./images/icons/speed.svg" alt="Иконка крит шанса" class="skill-icon">
+              <img src="./images/icons/speed.svg" alt="Крит шанс" class="skill-icon">
               Крит шанс (+4%)
             </span><br>
             Цена: <span id="priceCritChance">22</span>
           </button>
           <button class="skill-btn" data-skill="critDamage">
             <span class="skill-head">
-              <img src="./images/icons/magic.svg" alt="Иконка крит урона" class="skill-icon">
+              <img src="./images/icons/crit-damage.svg" alt="Крит урон" class="skill-icon">
               Крит урон (+0.15x)
             </span><br>
             Цена: <span id="priceCritDamage">30</span>
           </button>
         </div>
         <div class="player-stats">
-          <span class="stat-pill"><img src="./images/icons/power.svg" alt="" class="stat-icon">Сила: <strong id="statPower">1</strong></span>
-          <span class="stat-pill"><img src="./images/icons/magic.svg" alt="" class="stat-icon">Магия: <strong id="statMagic">0</strong></span>
-          <span class="stat-pill"><img src="./images/icons/speed.svg" alt="" class="stat-icon">Крит шанс: <strong id="statCritChance">0%</strong></span>
-          <span class="stat-pill"><img src="./images/icons/magic.svg" alt="" class="stat-icon">Крит урон: <strong id="statCritDamage">x1.50</strong></span>
+          <span class="stat-pill"><img src="./images/icons/sword.svg" alt="" class="stat-icon">Сила: <strong id="statPower">1</strong></span>
+          <span class="stat-pill"><img src="./images/icons/magic-wand.svg" alt="" class="stat-icon">Магия: <strong id="statMagic">0</strong></span>
+          <span class="stat-pill"><img src="./images/icons/bleed.svg" alt="" class="stat-icon">Кровот.: <strong id="statBleed">0%</strong></span>
+          <span class="stat-pill"><img src="./images/icons/speed.svg" alt="" class="stat-icon">Крит: <strong id="statCritChance">0%</strong></span>
+          <span class="stat-pill"><img src="./images/icons/crit-damage.svg" alt="" class="stat-icon">Крит урон: <strong id="statCritDamage">x1.50</strong></span>
         </div>
         <div class="artifacts-block">
           <h4>Артефакты</h4>
