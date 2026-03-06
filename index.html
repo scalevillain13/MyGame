@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Убийца Слизней</title>
+  <link rel="icon" type="image/png" href="./images/sl-boss.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/mobile.css">
+</head>
+<body class="intro-active">
+  <div id="introOverlay" class="intro-overlay">
+    <div class="intro-book">
+      <div class="intro-book-inner">
+        <div class="intro-page intro-page-left">
+          <h2 class="intro-title">Лес слизней</h2>
+          <p class="intro-text">На опушке тёмного леса уже много лун охотники рассказывают о слизнях: от мелких зелёных до огромного Босса, что копит силу в чаще.</p>
+          <p class="intro-text">Вы решили проложить тропу золота и опыта — один удар за другим, пока не доберётесь до него.</p>
+        </div>
+        <div class="intro-page intro-page-right">
+          <p class="intro-text">Сначала выбери сложность — без этого игра не начнётся. Пока не победишь Босса Слизней, сменить её будет нельзя.</p>
+          <div class="intro-difficulty">
+            <span class="intro-difficulty-label">Сложность:</span>
+            <div class="intro-difficulty-btns">
+              <button type="button" class="intro-difficulty-btn" data-difficulty="easy">Легко</button>
+              <button type="button" class="intro-difficulty-btn" data-difficulty="normal">Норма</button>
+              <button type="button" class="intro-difficulty-btn" data-difficulty="hard">Сложно</button>
+            </div>
+          </div>
+          <p class="intro-text">Копи золото, прокачивай силу, магию и крит — и вперёд, к победе.</p>
+          <button type="button" id="introStartBtn" class="intro-start-btn" disabled>Начать игру</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overlay"></div>
+  <main class="game-wrap">
+    <header class="top-panel">
+      <h1 class="logo-title">
+        <img src="./images/sl-boss.png" alt="Иконка игры Убийца Слизней" class="logo-icon">
+        Убийца Слизней
+      </h1>
+      <div class="stats-line">
+        <span>Золото: <strong id="gold">0</strong></span>
+        <span>Убийств: <strong id="kills">0</strong></span>
+        <span>Уровень: <strong id="level">1</strong></span>
+        <span>Опыт: <strong id="xpText">0 / 12</strong></span>
+      </div>
+      <div class="top-actions">
+        <button id="audioToggleBtn" class="audio-btn">Звук: Вкл</button>
+        <button id="resetBtn" class="reset-btn">Начать заново</button>
+      </div>
+    </header>
+
+    <div class="content-grid">
+      <aside class="difficulty-panel">
+        <div id="difficultyFrame" class="difficulty-frame">
+          <h4 class="difficulty-title">Сложность</h4>
+          <div class="difficulty-btns">
+            <button type="button" class="difficulty-btn active" data-difficulty="easy">Легко</button>
+            <button type="button" class="difficulty-btn" data-difficulty="normal">Норма</button>
+            <button type="button" class="difficulty-btn" data-difficulty="hard">Сложно</button>
+          </div>
+          <p id="difficultyLockHint" class="difficulty-lock-hint">Сменится после победы над боссом</p>
+        </div>
+      </aside>
+      <section class="skills-section">
+        <h3>Прокачка за золото</h3>
+        <div class="skills-grid">
+          <button class="skill-btn" data-skill="power">
+            <span class="skill-head">
+              <img src="./images/icons/power.svg" alt="Иконка силы" class="skill-icon">
+              Сила удара (+1)
+            </span><br>
+            Цена: <span id="pricePower">10</span>
+          </button>
+          <button class="skill-btn" data-skill="magic">
+            <span class="skill-head">
+              <img src="./images/icons/magic.svg" alt="Иконка магии" class="skill-icon">
+              Магия (+1)
+            </span><br>
+            Цена: <span id="priceMagic">15</span>
+          </button>
+          <button class="skill-btn" data-skill="critChance">
+            <span class="skill-head">
+              <img src="./images/icons/speed.svg" alt="Иконка крит шанса" class="skill-icon">
+              Крит шанс (+4%)
+            </span><br>
+            Цена: <span id="priceCritChance">22</span>
+          </button>
+          <button class="skill-btn" data-skill="critDamage">
+            <span class="skill-head">
+              <img src="./images/icons/magic.svg" alt="Иконка крит урона" class="skill-icon">
+              Крит урон (+0.15x)
+            </span><br>
+            Цена: <span id="priceCritDamage">30</span>
+          </button>
+        </div>
+        <div class="player-stats">
+          <span class="stat-pill"><img src="./images/icons/power.svg" alt="" class="stat-icon">Сила: <strong id="statPower">1</strong></span>
+          <span class="stat-pill"><img src="./images/icons/magic.svg" alt="" class="stat-icon">Магия: <strong id="statMagic">0</strong></span>
+          <span class="stat-pill"><img src="./images/icons/speed.svg" alt="" class="stat-icon">Крит шанс: <strong id="statCritChance">0%</strong></span>
+          <span class="stat-pill"><img src="./images/icons/magic.svg" alt="" class="stat-icon">Крит урон: <strong id="statCritDamage">x1.50</strong></span>
+        </div>
+        <div class="artifacts-block">
+          <h4>Артефакты</h4>
+          <ul id="artifactsList" class="artifacts-list"></ul>
+        </div>
+      </section>
+
+      <section class="battle-section">
+        <div class="monster-card">
+          <div id="critFxLayer" class="crit-fx-layer"></div>
+          <div id="damageNumbersLayer" class="damage-numbers-layer"></div>
+          <div id="deathParticlesLayer" class="death-particles-layer"></div>
+          <div class="monster-visual-wrap">
+            <img id="monsterImage" class="monster-image" src="./images/slimes/t1.svg" alt="Слизень">
+          </div>
+          <div class="rage-row">
+            <span>Ярость:</span>
+            <div class="rage-bar">
+              <div id="rageFill" class="rage-fill"></div>
+            </div>
+            <span id="ragePct">0%</span>
+          </div>
+          <h2 id="monsterName">Зеленый Слизень</h2>
+          <p id="monsterTrait" class="trait-text"></p>
+          <div class="hp-row">
+            <span>HP:</span>
+            <div class="hp-bar">
+              <div id="hpFill" class="hp-fill"></div>
+            </div>
+            <span id="hpText">0 / 0</span>
+          </div>
+          <button id="attackBtn" class="attack-btn">Ударить</button>
+          <p id="logText" class="log-text">Охота началась.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="./js/data.js"></script>
+  <script src="./js/game.js"></script>
+  <script src="./js/intro.js"></script>
+</body>
+</html>

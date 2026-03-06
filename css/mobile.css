@@ -1,0 +1,65 @@
+@media (max-width: 900px) {
+  .intro-book-inner {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .intro-book {
+    width: 94vw;
+    max-width: 94vw;
+    padding: 14px 12px 18px;
+    max-height: min(88vh, 88dvh);
+    max-height: min(88vh, 88svh);
+  }
+
+  .intro-difficulty-btns {
+    flex-direction: row;
+    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+  }
+
+  .intro-difficulty-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1 1 auto;
+    min-width: 80px;
+  }
+
+  .game-wrap {
+    padding: 12px 10px 16px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .difficulty-panel {
+    order: -1;
+    margin-bottom: 10px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .difficulty-frame {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .skills-section {
+    max-width: none;
+  }
+
+  .difficulty-btns {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .monster-image {
+    width: 260px;
+    height: 260px;
+  }
+}
+
