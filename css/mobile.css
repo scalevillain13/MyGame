@@ -198,8 +198,10 @@
   }
 
   .monster-image {
-    width: min(280px, 78vw) !important;
-    height: min(280px, 78vw) !important;
+    width: 78vw !important;
+    max-width: 280px !important;
+    height: 78vw !important;
+    max-height: 280px !important;
     max-width: 100%;
   }
 
@@ -252,16 +254,15 @@
 
   /* Интро-книга на телефоне */
   .intro-book-inner {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    min-height: 360px;
   }
 
   .intro-book {
     width: 94vw;
     max-width: 94vw;
     padding: 14px 12px 18px;
-    max-height: min(88vh, 88dvh);
-    max-height: min(88vh, 88svh);
+    max-height: 88vh;
+    overflow-y: auto;
   }
 
   .intro-difficulty-btns {
@@ -269,6 +270,11 @@
     flex-wrap: wrap;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+  }
+
+  .intro-nav-btn {
+    width: 100%;
+    margin-top: 10px;
   }
 
   .intro-difficulty-btn {
@@ -304,8 +310,14 @@
   }
 
   .monster-image {
-    width: min(240px, 82vw) !important;
-    height: min(240px, 82vw) !important;
+    width: 82vw !important;
+    max-width: 240px !important;
+    height: 82vw !important;
+    max-height: 240px !important;
+  }
+
+  .intro-book-inner {
+    min-height: 330px;
   }
 
   .difficulty-btn {

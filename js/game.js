@@ -574,21 +574,45 @@ function attack() {
     saveProgress();
 
     var card = document.querySelector(".monster-card");
+    var img = ui.monsterImage;
     if (card) card.classList.add("monster-out");
     setTimeout(function () {
       nextMonster();
-      render();
       if (card) {
         card.classList.remove("monster-out");
-        card.classList.add("monster-in");
+        card.classList.add("monster-hidden");
       }
-      setTimeout(function () {
-        if (card) card.classList.remove("monster-in");
-        state.attackLocked = false;
-        render();
-        updateDifficultyButtons();
-        saveProgress();
-      }, 560);
+      render();
+
+      var animateIn = function () {
+        if (card) {
+          card.classList.remove("monster-hidden");
+          card.classList.add("monster-in");
+        }
+        setTimeout(function () {
+          if (card) card.classList.remove("monster-in");
+          state.attackLocked = false;
+          render();
+          updateDifficultyButtons();
+          saveProgress();
+        }, 560);
+      };
+
+      if (!img) {
+        animateIn();
+        return;
+      }
+
+      var done = false;
+      var onReady = function () {
+        if (done) return;
+        done = true;
+        animateIn();
+      };
+
+      img.addEventListener("load", onReady, { once: true });
+      img.addEventListener("error", onReady, { once: true });
+      setTimeout(onReady, 260);
     }, 520);
     return;
   }

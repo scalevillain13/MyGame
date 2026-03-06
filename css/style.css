@@ -1,7 +1,6 @@
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 html {
@@ -19,8 +18,6 @@ body {
   margin: 0;
   height: 100vh;
   height: -webkit-fill-available;
-  max-height: 100dvh;
-  max-height: 100svh;
   overflow: hidden;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #fff;
@@ -36,6 +33,14 @@ body {
 button,
 img {
   user-select: none;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
 }
 
 button {
@@ -120,7 +125,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid rgba(139, 202, 165, 0.25);
 }
@@ -161,8 +166,9 @@ button {
 }
 .skills-section {
   width: 100%;
-  max-width: 300px;
+  max-width: 340px;
   justify-self: start;
+  min-height: 560px;
 }
 .battle-section {
   width: 100%;
@@ -172,9 +178,14 @@ button {
 
 /* Десктоп: окошко с монстром крупнее по вертикали и горизонтали */
 @media (min-width: 901px) {
+  .content-grid {
+    grid-template-columns: 250px 340px minmax(760px, 1fr);
+    gap: 14px;
+  }
   .battle-section {
-    padding: 20px 18px 24px;
+    padding: 22px 20px 26px;
     margin-bottom: 12px;
+    min-height: 620px;
   }
   .monster-card h2 {
     font-size: 1.35rem;
@@ -184,12 +195,12 @@ button {
     margin-bottom: 14px;
   }
   .monster-image {
-    width: 360px !important;
-    height: 360px !important;
+    width: 420px !important;
+    height: 420px !important;
   }
   .monster-image[data-monster="t3"] {
-    width: 400px !important;
-    height: 400px !important;
+    width: 460px !important;
+    height: 460px !important;
   }
   .rage-row {
     margin-bottom: 12px;
@@ -223,7 +234,7 @@ button {
 
 .content-grid {
   display: grid;
-  grid-template-columns: 200px minmax(220px, 300px) 1fr;
+  grid-template-columns: 250px 340px 1fr;
   gap: 10px;
   align-items: start;
   min-height: 0;
@@ -265,6 +276,16 @@ button {
 
 .monster-card.monster-out .monster-image {
   animation: monsterOut 0.5s ease-in forwards;
+}
+
+.monster-card.monster-hidden .monster-visual-wrap {
+  animation: none;
+}
+
+.monster-card.monster-hidden .monster-image {
+  opacity: 0;
+  transform: scale(0.35);
+  animation: none !important;
 }
 
 .monster-card.monster-in .monster-image {
@@ -509,21 +530,24 @@ button {
 
 /* Difficulty panel — крупнее на компе, слева */
 .difficulty-panel {
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
   justify-self: start;
 }
 .difficulty-frame {
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
   box-sizing: border-box;
   background: rgba(12, 28, 22, 0.9);
   border: 1px solid rgba(139, 202, 165, 0.35);
   border-radius: 10px;
   padding: 14px 16px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 14px rgba(0,0,0,0.25);
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
 }
 .difficulty-frame.difficulty-shake {
   animation: difficultyShake 0.5s ease-in-out;
@@ -744,6 +768,8 @@ button {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   flex-shrink: 0;
+  perspective: 1600px;
+  overflow: hidden;
 }
 
 .intro-book::before {
@@ -758,27 +784,106 @@ button {
   box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
 }
 
+.intro-book::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(0, 0, 0, 0.16) 50%,
+    rgba(255, 255, 255, 0.03) 70%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  opacity: 0.5;
+}
+
+.intro-book.flipping::after {
+  animation: foldFlash 0.55s ease;
+}
+
 @keyframes bookOpen {
   from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
 }
 
 .intro-book-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  position: relative;
+  min-height: 320px;
   color: #e8dcc8;
   font-size: 0.95rem;
   line-height: 1.5;
-  max-height: inherit;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .intro-page {
-  padding: 6px 8px;
+  position: absolute;
+  inset: 0;
+  padding: 8px 10px;
   min-height: 0;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 246, 222, 0.08), rgba(255, 236, 198, 0.03)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 28px);
+  box-shadow: inset 0 0 0 1px rgba(255, 236, 198, 0.06);
+}
+
+.intro-page.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.intro-page-left.active {
+  animation: pageTurnIn 0.55s ease;
+}
+
+.intro-page-right.active {
+  animation: pageTurnInRight 0.55s ease;
+}
+
+.intro-page.turn-out {
+  animation: pageTurnOut 0.5s ease forwards;
+}
+
+@keyframes pageTurnOut {
+  0% { opacity: 1; transform: rotateY(0deg) translateX(0) scale(1); filter: brightness(1); }
+  60% { filter: brightness(1.08); }
+  100% { opacity: 0; transform: rotateY(-86deg) translateX(-12px) scale(0.98); filter: brightness(0.9); }
+}
+
+@keyframes pageTurnIn {
+  0% { opacity: 0; transform: rotateY(84deg) translateX(14px) scale(0.98); filter: brightness(0.9); }
+  100% { opacity: 1; transform: rotateY(0deg) translateX(0) scale(1); filter: brightness(1); }
+}
+
+@keyframes pageTurnInRight {
+  0% { opacity: 0; transform: rotateY(-84deg) translateX(-14px) scale(0.98); filter: brightness(0.9); }
+  100% { opacity: 1; transform: rotateY(0deg) translateX(0) scale(1); filter: brightness(1); }
+}
+
+@keyframes foldFlash {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.75; }
+  100% { opacity: 0.35; }
+}
+
+.intro-nav-btn {
+  margin-top: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(55, 46, 34, 0.92);
+  color: #f2e7d0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.intro-nav-back {
+  margin-right: 10px;
 }
 
 .intro-title {
@@ -979,8 +1084,8 @@ body.game-visible .hp-row { animation-delay: 0.44s; }
 body.game-visible .attack-btn { animation-delay: 0.48s; }
 body.game-visible .log-text { animation-delay: 0.52s; }
 
-/* Невысокий экран (ноутбук 100%): ещё компактнее, без скролла */
-@media (max-height: 780px) {
+/* Невысокий экран: компактный режим только для узких вьюпортов */
+@media (max-height: 780px) and (max-width: 1200px) {
   .intro-book {
     max-height: min(72vh, 72dvh);
     max-height: min(72vh, 72svh);
@@ -1010,4 +1115,90 @@ body.game-visible .log-text { animation-delay: 0.52s; }
 }
 
 /* Safari: плавный скролл уже задан у .intro-overlay и .intro-book-inner */
+
+/* Большой десктоп: фиксированные размеры окон + очень большое окно монстра */
+@media (min-width: 1201px) and (min-height: 781px) {
+  .content-grid {
+    grid-template-columns: 270px 360px minmax(860px, 1fr);
+    gap: 16px;
+  }
+  .difficulty-panel,
+  .difficulty-frame {
+    width: 270px;
+    min-width: 270px;
+    max-width: 270px;
+  }
+  .skills-section {
+    width: 360px;
+    min-width: 360px;
+    max-width: 360px;
+    min-height: 620px;
+  }
+  .difficulty-frame {
+    min-height: 620px;
+  }
+  .battle-section {
+    min-height: 700px;
+    padding: 24px 22px 28px;
+  }
+  .monster-image {
+    width: 480px !important;
+    height: 480px !important;
+  }
+  .monster-image[data-monster="t3"] {
+    width: 520px !important;
+    height: 520px !important;
+  }
+}
+
+/* Ноутбук по высоте: чтобы HP и кнопка удара всегда были видны */
+@media (min-width: 901px) and (max-height: 900px) {
+  .battle-section {
+    min-height: 0;
+    padding: 12px 12px 14px;
+    overflow-y: auto;
+  }
+  .monster-visual-wrap {
+    margin-bottom: 8px;
+  }
+  .monster-image {
+    width: 300px !important;
+    height: 300px !important;
+  }
+  .monster-image[data-monster="t3"] {
+    width: 340px !important;
+    height: 340px !important;
+  }
+  .monster-card h2 {
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+  }
+  .trait-text {
+    font-size: 0.85rem;
+    min-height: 18px;
+  }
+  .rage-row {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .rage-bar {
+    height: 14px;
+  }
+  .hp-row {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .hp-bar {
+    height: 16px;
+  }
+  .attack-btn {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
+  .log-text {
+    margin-top: 8px;
+    min-height: 18px;
+    font-size: 0.85rem;
+  }
+}
 
