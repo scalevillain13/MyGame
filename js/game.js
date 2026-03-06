@@ -658,7 +658,9 @@ function upgradeSkill(skill) {
   saveProgress();
 }
 
-ui.attackBtn.addEventListener("click", attack);
+if (ui.attackBtn) {
+  ui.attackBtn.addEventListener("click", attack);
+}
 
 ui.skillButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -666,19 +668,23 @@ ui.skillButtons.forEach((btn) => {
   });
 });
 
-ui.resetBtn.addEventListener("click", () => {
-  ensureAudioStarted();
-  const confirmed = window.confirm("Сбросить весь прогресс и начать заново?");
-  if (!confirmed) {
-    return;
-  }
-  resetProgress();
-});
+if (ui.resetBtn) {
+  ui.resetBtn.addEventListener("click", () => {
+    ensureAudioStarted();
+    const confirmed = window.confirm("Сбросить весь прогресс и начать заново?");
+    if (!confirmed) {
+      return;
+    }
+    resetProgress();
+  });
+}
 
-ui.audioToggleBtn.addEventListener("click", () => {
-  ensureAudioStarted();
-  toggleAudioMute();
-});
+if (ui.audioToggleBtn) {
+  ui.audioToggleBtn.addEventListener("click", () => {
+    ensureAudioStarted();
+    toggleAudioMute();
+  });
+}
 
 document.addEventListener("click", (event) => {
   const target = event.target;

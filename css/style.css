@@ -886,6 +886,24 @@ button {
   margin-right: 10px;
 }
 
+/* Safari-safe: отключаем 3D перелистывание, оставляем простой показ страниц */
+body.safari-safe .intro-book {
+  perspective: none;
+}
+
+body.safari-safe .intro-book::after {
+  display: none;
+}
+
+body.safari-safe .intro-page,
+body.safari-safe .intro-page.active,
+body.safari-safe .intro-page-left.active,
+body.safari-safe .intro-page-right.active,
+body.safari-safe .intro-page.turn-out {
+  animation: none !important;
+  transform: none !important;
+}
+
 .intro-title {
   margin: 0 0 10px;
   font-size: 1.3rem;

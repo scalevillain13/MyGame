@@ -20,6 +20,11 @@ function startGameAfterIntro() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent || "");
+  if (isSafari && document.body) {
+    document.body.classList.add("safari-safe");
+  }
+
   const introSeen = localStorage.getItem(INTRO_SEEN_KEY) === "1";
   if (introSeen) {
     startGameAfterIntro();
