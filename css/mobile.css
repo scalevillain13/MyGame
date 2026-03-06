@@ -1,9 +1,256 @@
+/* Мобильная версия — читаемо и без переполнения */
 @media (max-width: 900px) {
   body {
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
+  .game-wrap {
+    padding: 10px 12px 20px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Шапка: компактно, без переноса за экран */
+  .top-panel {
+    padding: 10px 12px 12px;
+    margin-bottom: 10px;
+  }
+
+  .logo-title {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Счётчики: 2 ряда по 2, одинаковый размер, без overflow */
+  .stats-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    min-height: 0;
+  }
+
+  .stat-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-size: 0.9rem;
+  }
+
+  .stat-item strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 4ch;
+  }
+
+  .stat-line-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* Сетка: одна колонка, порядок блоков */
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Блок сложности: первый, аккуратная ширина */
+  .difficulty-panel {
+    order: -1;
+    margin-bottom: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .difficulty-frame {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px 14px 14px;
+  }
+
+  .difficulty-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .difficulty-btns {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .difficulty-btn {
+    flex: 1 1 0;
+    min-width: 80px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .difficulty-lock-hint {
+    margin-top: 8px;
+    font-size: 0.7rem;
+  }
+
+  .top-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .audio-btn,
+  .reset-btn {
+    width: auto;
+    min-width: 120px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+
+  /* Прокачка: 2 колонки или одна, без вылезания */
+  .skills-section {
+    max-width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .skills-section h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .skill-btn {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    min-height: 56px;
+  }
+
+  .skill-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .player-stats {
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .stat-pill {
+    padding: 4px 8px;
+    font-size: 0.78rem;
+  }
+
+  .stat-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .artifacts-block {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .artifacts-block h4 {
+    font-size: 0.85rem;
+  }
+
+  .artifacts-list {
+    font-size: 0.8rem;
+  }
+
+  /* Бой: монстр по центру, не вылезает за экран */
+  .battle-section {
+    padding: 14px 12px 18px;
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  .monster-card {
+    max-width: 100%;
+  }
+
+  .monster-visual-wrap {
+    margin-bottom: 10px;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .monster-image {
+    width: min(280px, 78vw) !important;
+    height: min(280px, 78vw) !important;
+    max-width: 100%;
+  }
+
+  .monster-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .trait-text {
+    font-size: 0.8rem;
+    min-height: 18px;
+    text-align: center;
+  }
+
+  .rage-row {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+
+  .rage-bar {
+    height: 14px;
+  }
+
+  .hp-row {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+
+  .hp-bar {
+    height: 16px;
+  }
+
+  .attack-btn {
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  .log-text {
+    font-size: 0.82rem;
+    margin-top: 10px;
+    min-height: 18px;
+    text-align: center;
+  }
+
+  /* Интро-книга на телефоне */
   .intro-book-inner {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -30,62 +277,39 @@
     flex: 1 1 auto;
     min-width: 80px;
   }
+}
 
-  .game-wrap {
-    padding: 12px 10px 16px;
-  }
-
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .difficulty-panel {
-    order: -1;
-    margin-bottom: 10px;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-  }
-
-  .difficulty-frame {
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-  }
-
-  .skills-section {
-    max-width: none;
-  }
-
-  .difficulty-btns {
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .top-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .audio-btn,
-  .reset-btn {
-    width: auto;
-  }
-
+/* Очень узкий экран (старые телефоны) */
+@media (max-width: 380px) {
   .stats-line {
-    font-size: 0.95rem;
-    gap: 14px;
+    gap: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .stat-item strong {
+    max-width: 3ch;
   }
 
   .stat-line-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-btn {
+    min-height: 52px;
   }
 
   .monster-image {
-    width: 260px;
-    height: 260px;
+    width: min(240px, 82vw) !important;
+    height: min(240px, 82vw) !important;
+  }
+
+  .difficulty-btn {
+    min-width: 70px;
+    font-size: 0.85rem;
   }
 }
-
